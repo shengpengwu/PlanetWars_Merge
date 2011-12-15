@@ -12,31 +12,44 @@
 #include <vector>
 #include "Model.h"
 #include "DrawableGeometry.h"
+#include "Ship.h"
+
 
 using namespace std;
 
 class Lane: public DrawableGeometry
 {
 public:
-    Lane();
+    Lane(Ship* atkShip, Ship* defShip);
     ~Lane();
 
-    vector <Unit *> attackerUnits;
-    vector <Unit *> defenderUnits;
+    std::vector<Unit*> attackerUnits;
+    std::vector<Unit*> defenderUnits;
     int furthestAttacker;
     int furthestDefender;
+	Ship* attackShip;
+	Ship* defendShip;
+	int atkSummonTime;
+	int defSummonTime;
     
     void setSelected(bool selected);
     void deployUnit(Unit * unit, bool attacker);
+	void summonUnit();
     void advanceUnit(Unit * unit, bool attacker);
     void actUnit(Unit * unit, bool attacker);
     Unit* findFurthestUnit(bool attacker);
+	Unit* findNextHeal(bool attacker);
     void tick();
+	int getIndex(vector<Unit*> list, Unit* unit);
     
     static bool compiled;       //True iff displayList names a valid glDisplayList
     static GLuint displayList;  //Name of displaylist for object
     void compileDL();
     void draw();
+
+
+
+
 };
 
 #endif

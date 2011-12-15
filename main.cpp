@@ -35,7 +35,7 @@ Map * map;
 Node ** nodeArray;
 Selector * selector;
 Menu * menu;
-// MiniGame * game; //<- CANNOT USE AS MODEL'S GAME IS DYNAMIC
+MiniGame * game; //<- CANNOT USE AS MODEL'S GAME IS DYNAMIC
 
 /////////
 //GAME LOGIC FUNCTIONS
@@ -52,7 +52,7 @@ void initGame(int numPlayers, int numNodes)
     selector = model->setSelector();
     hud = model->setHud();
     map = model->setMap();
-    //game = model->setMiniGame(nodeArray[0], playerArray[0]->shipArray[0], playerArray[1]->shipArray[0]);
+    game = model->setMiniGame(nodeArray[0], playerArray[0]->shipArray[0], playerArray[1]->shipArray[0]);
     menu = model->setMenu();
 }
 
@@ -206,10 +206,12 @@ void gameplay(){
 void minigame() { 
     glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0.0, 20.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(0.0, 350.0, 800.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     
-    model->mgame->update();
-	model->mgame->drawGame();
+    //model->mgame->update();
+	//model->mgame->drawGame();
+	game->update();
+	game->drawGame();
 }
 
 
@@ -243,7 +245,7 @@ void DisplayFunc()
 	gluPerspective(60.0 , ((float) model->width) / ((float) model->height), 1.0f , 100.0);
 	glViewport(0 , 0 , model->width, model->height);
     
-   
+	//model->state = MINIGAME;
 	switch(model->state){
         case TITLE:
             pregame();
@@ -320,9 +322,33 @@ void KeyboardFunc(unsigned char key, int x, int y)
         case 's':
             playerArray[0]->purchaseShip();
             break;
+	}
+    
+    switch(key)
+    {
+        case 27: // Press the ESC key to exit the game immediately.
+            exit(0);
+            break;
+        case 'p':
+            //Menu::setMenu(META);
+            break;
+            // For state testing:
+        case '1':
+            model->state = GAMEPLAY;
+            break;
+        case '0':
+            model->state = TITLE;
+            break;
+        case '2':
+            model->state = MINIGAME;
+            break;
+            
         case ' ':
             model->finishTurn = true;
-            break;
+            
+        //case '[': 
+        //    game->changeLane(LEFT);
+        //    break;
         }
         break;
 	case MINIGAME:
@@ -353,6 +379,8 @@ void KeyboardFunc(unsigned char key, int x, int y)
 
 		break;
 	}
+
+	
 	// General key statements:
 	switch(key)
 	{
@@ -449,4 +477,3 @@ int main (int argc, char * argv[])
     std::cout << "Hello, World!\n";
     return 0;
 }
-

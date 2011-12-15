@@ -1,3 +1,4 @@
+
 //
 //  Ship.cpp
 //  SpongeBobWars
@@ -22,6 +23,8 @@ Ship::Ship(Player * o)
     numFireUnits = 0;
     done = false;
     if(!Ship::compiled) compileDL();
+	health = 20000;
+	//summonTime = SUMMON_TIME;
 }
 
 Ship::~Ship()
@@ -31,11 +34,15 @@ Ship::~Ship()
 
 void Ship::compileDL()
 {
+
     //Sample compilation of a simple sphere 
     if(Ship::compiled) return;
     displayList = glGenLists(1);
     glNewList(Ship::displayList, GL_COMPILE);
     
+    //Set Color Here
+    setColor(1.0, 0.0, 0.0, 0.0, 0.5, 1.0, 1.0);
+    setGLColor();
 
     //DRAW SHIP HERE
     glPushMatrix();
@@ -173,7 +180,7 @@ void Ship::drawAtPosition()
 {
     if(loc == Model::getSelf()->nullNode)
     {
-        //draw();
+        draw();
         return;
     }
     glPushMatrix();

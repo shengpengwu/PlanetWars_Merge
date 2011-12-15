@@ -35,23 +35,27 @@
 #define META 3
 
 //GAME CONSTANTS
-#define MAX_UNITS 10
 #define NUM_LANES 5
 #define MAP_DENSITY 1 //1(linear) to 6(full mesh)
 #define MAP_DENSITY_STRICTNESS 1000000 //Number of attempts worth spending to try and fit density rule
 #define NULL_LOCATION 99999 //'unattainable' row/column to be used for non-placed nodes
-#define SHIP_COST 10
 
 //MAP GEO
 #define ROW_SPACING 1.3
 #define COL_SPACING 1.6
 
 //MINIGAME GEO
-#define LANE_WIDTH 10
-#define LANE_LENGTH 100
+#define LANE_WIDTH 100
+#define LANE_LENGTH 1000
 
-//SIHP GEO
+//SHIP GEO
 #define SHIP_SIZE 1
+
+//max units
+#define MAX_UNITS 10
+
+//ship cost
+#define SHIP_COST 10
 
 //NODE/UNIT TYPES
 #define NUM_TYPES  5
@@ -88,28 +92,31 @@
 
 //TYPE ATTRIBUTE VARIABLES
 #define WATER_HEALTH 1000;
-#define WATER_DAMAGE 100;
-#define WATER_RANGE 2;
+#define WATER_DAMAGE 20;
+#define WATER_RANGE 70;
 #define WATER_SPEED 3;
-#define WATER_COOL 5;
+#define WATER_COOL 50;
+#define WATER_HEAL_COOL 50;
+#define WATER_HEAL 40;
+;
 
-#define EARTH_HEALTH 5000;
-#define EARTH_DAMAGE 10;
-#define EARTH_RANGE 1;
+#define EARTH_HEALTH 3000;
+#define EARTH_DAMAGE 50;
+#define EARTH_RANGE 10;
 #define EARTH_SPEED 1;
-#define EARTH_COOL 5;
+#define EARTH_COOL 50;
 
-#define WIND_HEALTH 200;
+#define WIND_HEALTH 1200;
 #define WIND_DAMAGE 50;
-#define WIND_RANGE 10;
+#define WIND_RANGE 100;
 #define WIND_SPEED 5;
-#define WIND_COOL 2;
+#define WIND_COOL 20;
 
-#define FIRE_HEALTH 1000;
+#define FIRE_HEALTH 1800;
 #define FIRE_DAMAGE 150;
-#define FIRE_RANGE 5;
+#define FIRE_RANGE 50;
 #define FIRE_SPEED 3;
-#define FIRE_COOL 6;
+#define FIRE_COOL 60;
 
 //SHIP TYPES
 #define NUM_SHIP_TYPES     4
@@ -118,15 +125,20 @@
 #define SHIP_TYPE_CARRIER  2
 #define SHIP_TYPE_BATTLE   3
 
+//summon time
+#define SUMMON_TIME 150
+
 //DEFAULTS
 #define DEFAULT_NUM_PLAYERS 2
 #define DEFAULT_NUM_NODES 50
 #define SEED 1
-#define DEFAULT_STATE TITLE
+#define DEFAULT_STATE MINIGAME
 
 //Forward declarations- everything has access to everything (woah)
 class Menu;
 class Player;
+class Fleet;
+class Flagship;
 class Ship;
 class Unit;
 class Hud;
@@ -141,6 +153,7 @@ class MiniGame;
 
 #include "Menu.h"
 #include "Player.h"
+#include "Flagship.h"
 #include "Ship.h"
 #include "Unit.h"
 #include "Hud.h"
@@ -148,6 +161,7 @@ class MiniGame;
 #include "Node.h"
 #include "Selector.h"
 #include "MiniGame.h"
+#include <time.h>
 
 //Singleton class
 class Model

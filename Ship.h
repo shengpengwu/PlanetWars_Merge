@@ -24,6 +24,9 @@ public:
     bool done;
     Node * loc;
     Player * owner;
+	int health;
+
+	int summonTime;
     
     int numWaterUnits;
     int numEarthUnits;
