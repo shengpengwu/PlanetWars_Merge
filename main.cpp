@@ -206,7 +206,7 @@ void gameplay(){
 void minigame() { 
     glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0.0, 20.0, 100.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	gluLookAt(0.0, 350.0, 800.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     
     model->mgame->update();
 	model->mgame->drawGame();
@@ -240,7 +240,7 @@ void DisplayFunc()
     //Main Viewport
     glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0 , ((float) model->width) / ((float) model->height), 1.0f , 100.0);
+	gluPerspective(60.0 , ((float) model->width) / ((float) model->height), 1.0f , 2000.0);
 	glViewport(0 , 0 , model->width, model->height);
     
    
