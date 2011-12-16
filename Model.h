@@ -138,7 +138,6 @@
 class Menu;
 class Player;
 class Fleet;
-class Flagship;
 class Ship;
 class Unit;
 class Hud;
@@ -153,7 +152,6 @@ class MiniGame;
 
 #include "Menu.h"
 #include "Player.h"
-#include "Flagship.h"
 #include "Ship.h"
 #include "Unit.h"
 #include "Hud.h"
