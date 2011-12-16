@@ -75,8 +75,11 @@ void Lane::setSelected(bool selected)
 
 void Lane::deployUnit(Unit * unit, bool attacker)
 {
+	
+
 	if(attacker)
 	{
+		
 		if(atkSummonTime <= 0) { 
 			attackerUnits.resize(attackerUnits.size()+1);
 			attackerUnits[attackerUnits.size()-1] = unit;
@@ -95,99 +98,116 @@ void Lane::deployUnit(Unit * unit, bool attacker)
 
 void Lane::advanceUnit(Unit * unit, bool attacker)
 {
-	if(attacker)
-	{ 
+
+    if(attacker)
+    { 
 
 		Unit* nextHealUnit = findNextHeal(true);
-		if(unit->pos+unit->range  > LANE_LENGTH-furthestDefender){    
-			//unit->pos = furthestDefender;	
-		}		
-		else if(nextHealUnit != Model::getSelf()->nullUnit && unit->type == 0 && unit->pos+unit->range > nextHealUnit->pos) {	
-		}     
-		else
-			unit->pos = unit->pos+unit->speed;
 
-		if(unit->pos > furthestAttacker) furthestAttacker = unit->pos;
-	}
-	else
-	{
+		if(unit->pos+unit->range  > LANE_LENGTH-furthestDefender){
+            //unit->pos = furthestDefender;
+		}
+		else if(nextHealUnit != Model::getSelf()->nullUnit && unit->type == 0 && unit->pos+unit->range > nextHealUnit->pos) {
+
+		}
+        else
+            unit->pos = unit->pos+unit->speed;
+        
+        if(unit->pos > furthestAttacker) furthestAttacker = unit->pos;
+    }
+    else
+    {
 
 		Unit* nextHealUnit = findNextHeal(false);
-		if(unit->pos+unit->range > LANE_LENGTH-furthestAttacker){     
-			//unit->pos = furthestAttacker;	
-		}	
-		else if(nextHealUnit != Model::getSelf()->nullUnit && unit->type == 0 && unit->pos+unit->range > nextHealUnit->pos) {	
 
-		}    
-		else
-			unit->pos = unit->pos+unit->speed;
+		if(unit->pos+unit->range > LANE_LENGTH-furthestAttacker){
+           //unit->pos = furthestAttacker;
+		}
+		else if(nextHealUnit != Model::getSelf()->nullUnit && unit->type == 0 && unit->pos+unit->range > nextHealUnit->pos) {
 
-		if(unit->pos > furthestDefender) furthestDefender = unit->pos;
-	}
+		}
+        else
+           unit->pos = unit->pos+unit->speed;
+        
+        if(unit->pos > furthestDefender) furthestDefender = unit->pos;
+    }	
 }
+
 
 void Lane::actUnit(Unit * unit, bool attacker)
 {
-	bool kill;
-	//attacker 
-	if(attacker)
-	{
-		//if unit is healer and within range of friendly, heal
-		if(findNextHeal(true) != Model::getSelf()->nullUnit)	
-		{			
-			if(unit->pos+unit->speed+unit->range >= findNextHeal(true)->pos)  
-			{							
-				unit->healUnit(findNextHeal(true));     
-			}	
-		}		
-		//if unit is within range of an enemy, attack    
-		if(unit->pos+unit->speed+unit->range >= LANE_LENGTH-furthestDefender)     
-		{
-			if(defenderUnits.size() != 0)
+    bool kill;
 
-			{				               
-				kill = unit->attack(findFurthestUnit(false));
-				if(kill)
-				{
+	//attacker
+    if(attacker)
+    {
+		//if unit is healer and within range of friendly, heal
+		if(findNextHeal(true) != Model::getSelf()->nullUnit)
+		{
+			if(unit->pos+unit->speed+unit->range >= findNextHeal(true)->pos)
+            {				
+				unit->healUnit(findNextHeal(true));
+            }
+		}
+
+		//if unit is within range of an enemy, attack    
+		if(unit->pos+unit->speed+unit->range >= LANE_LENGTH-furthestDefender)        
+        {
+			if(defenderUnits.size() != 0)
+			        
+            {				
+                kill = unit->attack(findFurthestUnit(false));
+                if(kill)
+                {
 					//use vector.erase() with index in array
 					defenderUnits.erase( defenderUnits.begin() + getIndex(defenderUnits, findFurthestUnit(false)));
-					//delete defenderUnits[defenderUnits.size()];         
-					//defenderUnits.resize(defenderUnits.size()-1);     
-					if(defenderUnits.size() == 0)
-						furthestDefender = 0;
-					else
-						furthestDefender = findFurthestUnit(false)->pos;
-				}
-			}
-		}
-		else if(unit->pos+unit->speed+unit->range >= LANE_LENGTH) 
-		{
+
+                    //delete defenderUnits[defenderUnits.size()];
+                    //defenderUnits.resize(defenderUnits.size()-1);
+                    if(defenderUnits.size() == 0)
+                        furthestDefender = 0;
+                    else
+                        furthestDefender = findFurthestUnit(false)->pos;
+                }
+            }
+
+
+
+
+
+        }
+        else if(unit->pos+unit->speed+unit->range >= LANE_LENGTH) 
+        {
 			//Attack Ship
-			kill = unit->attackShip(defendShip);	
-			if(kill) {	
-				//end game	
-				//MessageBox(NULL, "Defend ship is dead!", NULL, NULL);		
-			}            
-		}
-	}
-	//defender 
-	else
-	{
+			kill = unit->attackShip(defendShip);
+
+			if(kill) {
+				//end game
+				//MessageBox(NULL, "Defend ship is dead!", NULL, NULL);
+			}
+            
+        }
+    }
+
+	//defender
+    else
+    {
 
 		//if unit is healer and within range of friendly, heal
-		if(findNextHeal(false) != Model::getSelf()->nullUnit)	
-		{		
-			if(unit->pos+unit->speed+unit->range >= findNextHeal(false)->pos)   
-			{						
-				unit->healUnit(findNextHeal(false));       
-			}	
-		}	
-		//if unit is within range of an enemy, attack 
-		if(unit->pos+unit->speed+unit->range >= LANE_LENGTH-furthestAttacker)  
+		if(findNextHeal(false) != Model::getSelf()->nullUnit)
 		{
-			if(attackerUnits.size() != 0)
-			{
-				kill = unit->attack(findFurthestUnit(true));
+			if(unit->pos+unit->speed+unit->range >= findNextHeal(false)->pos)
+            {				
+				unit->healUnit(findNextHeal(false));
+            }
+		}
+
+		//if unit is within range of an enemy, attack
+        if(unit->pos+unit->speed+unit->range >= LANE_LENGTH-furthestAttacker)
+        {
+            if(attackerUnits.size() != 0)
+            {
+                kill = unit->attack(findFurthestUnit(true));
 				if(kill)
 				{
 					//use vector.erase() with index in array
@@ -204,16 +224,20 @@ void Lane::actUnit(Unit * unit, bool attacker)
 
 		}
 		else if(unit->pos+unit->speed+unit->range >= LANE_LENGTH)
-		{		
-			//Attack Ship	
-			kill = unit->attackShip(attackShip);	
-			if(kill) {			
-				//end game	
-				//MessageBox(NULL, "Attack ship is dead!", NULL, NULL);	
-			}	
-		}	
+		{
+			//Attack Ship
+			kill = unit->attackShip(attackShip);
+
+			if(kill) {
+				//end game
+				//MessageBox(NULL, "Attack ship is dead!", NULL, NULL);
+			}
+		}
 	}
 }
+
+
+
 
 
 Unit* Lane::findFurthestUnit(bool attacker)

@@ -91,7 +91,7 @@
 #define PLAYER_2_B 0.6f
 
 //TYPE ATTRIBUTE VARIABLES
-#define WATER_HEALTH 1000;
+#define WATER_HEALTH 100000;
 #define WATER_DAMAGE 20;
 #define WATER_RANGE 70;
 #define WATER_SPEED 3;
@@ -100,19 +100,19 @@
 #define WATER_HEAL 40;
 ;
 
-#define EARTH_HEALTH 3000;
+#define EARTH_HEALTH 300000;
 #define EARTH_DAMAGE 50;
 #define EARTH_RANGE 10;
 #define EARTH_SPEED 1;
 #define EARTH_COOL 50;
 
-#define WIND_HEALTH 1200;
+#define WIND_HEALTH 120000;
 #define WIND_DAMAGE 50;
 #define WIND_RANGE 100;
 #define WIND_SPEED 5;
 #define WIND_COOL 20;
 
-#define FIRE_HEALTH 1800;
+#define FIRE_HEALTH 180000;
 #define FIRE_DAMAGE 150;
 #define FIRE_RANGE 50;
 #define FIRE_SPEED 3;

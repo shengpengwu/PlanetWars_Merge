@@ -32,10 +32,13 @@ void MiniGame::selectLane(int lane)
 }
 
 void MiniGame::deployUnit(Ship * s, int type) {
-    Unit * u = s->deployUnit(type);
+	
+    //Unit * u = s->deployUnit(type);
+	Unit* u = new Unit(type);
     if(u != Model::getSelf()->nullUnit)
     {
-        lanes[selectedLane]->deployUnit(u, (s == attacker));
+		//change != attacker
+        lanes[selectedLane]->deployUnit(u, (s != attacker));
     }
 }
 
@@ -44,7 +47,8 @@ void MiniGame::update() {
     {
         lanes[i]->tick();
     }
-	generateUnits();}
+	generateUnits();
+}
 
 
 void MiniGame::drawGame() {
@@ -74,7 +78,10 @@ void MiniGame::drawGame() {
 }
 
 void MiniGame::generateUnits() {
-	int randLane;	int randType;	randLane = rand() % NUM_LANES;	randType = rand() % 4;
+	int randLane;
+	int randType;
+	randLane = rand() % NUM_LANES;	
+	randType = rand() % 4;
 
 	if(counter == 0) {		
 		Unit* temp = new Unit();
