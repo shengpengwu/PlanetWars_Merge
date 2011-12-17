@@ -13,7 +13,7 @@
   // Linux Includes Here
   #error Can't be compiled on Linux yet
 #elif defined _WIN32 || _WIN64
-    #include <GL\freeglut.h>
+#include "GL\freeglut.h"
     #include <GL\GL.h>
 #else
     #include <OpenGL/OpenGL.h>
