@@ -7,7 +7,6 @@
 //
 
 #include "Menu.h"
-#include "Textprint.h"
 
 bool Menu::compiled = false;
 GLuint Menu::displayList;
@@ -30,8 +29,6 @@ Menu::~Menu()
 void Menu::setTitle(){
 	menuFlag = true;
     setColor(.81, .194, .7212, 1.0, 1.0, 1.0, 1.0);
-	TextPrint().bitText(-13,2,-10,0.3,0.3,0.3,GLUT_BITMAP_TIMES_ROMAN_24, "Welcome to Planet Wars");
-
 }
 
 void Menu::setMain(){
@@ -87,8 +84,8 @@ void Menu::compileDL()
 {
     if(Menu::compiled) return;
     Menu::displayList = glGenLists(1);
-	glDisable(GL_LIGHTING);
     glPushMatrix();
+    //glScaled(100, 10, 10);
     glNewList(Menu::displayList, GL_COMPILE);
     
     glBegin(GL_QUADS);

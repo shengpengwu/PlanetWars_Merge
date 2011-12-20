@@ -12,6 +12,7 @@
 bool Selector::compiled = false;
 GLuint Selector::displayList;
 GLuint Selector::dot;
+GLuint Selector::arrow;
 
 Selector::Selector()
 {
@@ -105,6 +106,28 @@ void Selector::compileDL()
     
     
     
+    Selector::arrow = glGenLists(1);
+    glNewList(Selector::arrow, GL_COMPILE);
+    
+    glBegin(GL_TRIANGLES);
+    
+    glVertex3d(0.0f, layer+0.5f, -0.3f);
+    glVertex3d(0.0f, layer+0.5f, 0.3f);
+    glVertex3d(0.8f, layer+0.5f, 0.3f);
+
+    glVertex3d(0.8f, layer+0.5f, 0.3f);
+    glVertex3d(0.8f, layer+0.5f, -0.3f);
+    glVertex3d(0.0f, layer+0.5f, -0.3f);
+    
+    glVertex3d(0.8f, layer+0.5f, 1.0f);
+    glVertex3d(1.0f, layer+0.5f, 0);
+    glVertex3d(0.8f, layer+0.5f, -1.0f);
+    
+    glEnd();
+    
+    glEndList(); 
+    
+    
     
     Selector::compiled = true;
 }
@@ -115,6 +138,35 @@ void Selector::draw()
     setColor(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
     setGLColor();
     glCallList(Selector::displayList);
+}
+
+void Selector::drawArrow()
+{
+    if(Model::getSelf()->selectedShip == Model::getSelf()->nullShip) return;
+    if(Model::getSelf()->selectedShip->owner == Model::getSelf()->playerArray[0])
+        setColor(PLAYER_1_R, PLAYER_1_G, PLAYER_1_B, 1.0, 0.1, 0.5, 0.7);
+    else
+        setColor(PLAYER_2_R, PLAYER_2_G, PLAYER_2_B, 1.0, 0.1, 0.5, 0.7);
+    
+    setGLColor();
+    
+    glPushMatrix();
+    
+    glTranslatef(Model::getSelf()->selectedShip->loc->column*COL_SPACING, 0, 
+                 Model::getSelf()->selectedShip->loc->row*ROW_SPACING);
+    glRotatef(90, 0.0, 1.0, 0.0);
+    float x = (float)(column*COL_SPACING-Model::getSelf()->selectedShip->loc->column*COL_SPACING);
+    float y = (float)(row*ROW_SPACING-Model::getSelf()->selectedShip->loc->row*ROW_SPACING);
+    float mag = sqrtf((x*x)+(y*y));
+    float rot = acos(y/mag)*180.0f/3.1415f + 180;
+    if(column < Model::getSelf()->selectedShip->loc->column) rot*=-1;
+    glRotatef(rot, 0.0, 1.0, 0.0);
+    glScalef(mag, 1.0f, 1.0f);
+
+    glCallList(Selector::arrow);
+
+    glPopMatrix();
+
 }
 
 void Selector::drawDot()
@@ -150,4 +202,5 @@ void Selector::drawAtPosition()
     glTranslated(dotX*COL_SPACING, 0, dotY*ROW_SPACING);
     drawDot();
     glPopMatrix();
+    drawArrow();
 }

@@ -277,7 +277,7 @@ Unit* Lane::findNextHeal(bool attacker){
 	{      
 		for(int i = 0; i < attackerUnits.size(); i++)     
 		{		
-			if(attackerUnits[i]->pos < closestPos && attackerUnits[i]->health < attackerUnits[i]->maxHealth && attackerUnits[i]->type != 0)   
+			if(attackerUnits[i]->pos < closestPos && attackerUnits[i]->health < attackerUnits[i]->maxHealth && attackerUnits[i]->type != 0 &&  attackerUnits[i]->type != 5)   
 			{     
 				closestPos = attackerUnits[i]->pos;      
 				x = attackerUnits[i];     
@@ -288,7 +288,7 @@ Unit* Lane::findNextHeal(bool attacker){
 	{    
 		for(int i = 0; i < defenderUnits.size(); i++)  
 		{		
-			if(defenderUnits[i]->pos < closestPos && defenderUnits[i]->health < defenderUnits[i]->maxHealth && defenderUnits[i]->type != 0)  
+			if(defenderUnits[i]->pos < closestPos && defenderUnits[i]->health < defenderUnits[i]->maxHealth && defenderUnits[i]->type != 0 && defenderUnits[i]->type != 5)  
 			{           
 				closestPos = defenderUnits[i]->pos;     
 				x = defenderUnits[i]; 
@@ -300,7 +300,9 @@ Unit* Lane::findNextHeal(bool attacker){
 
 void Lane::tick()
 {
-	atkSummonTime--;	defSummonTime--;    //Update Units' Positions
+	atkSummonTime--;
+	defSummonTime--;  
+	//Update Units' Positions
 	for(int i = 0; i < defenderUnits.size(); i++)
 	{
 		advanceUnit(defenderUnits[i], false);		
@@ -314,7 +316,8 @@ void Lane::tick()
 	for(int i = 0; i < defenderUnits.size(); i++)
 	{
 		actUnit(defenderUnits[i], false);
-		defenderUnits[i]->update();    }
+		defenderUnits[i]->update();   
+	}
 	for(int i = 0; i < attackerUnits.size(); i++)
 	{
 		actUnit(attackerUnits[i], true);

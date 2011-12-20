@@ -14,7 +14,23 @@ MiniGame::MiniGame(Node * planet, Ship * attackerShip, Ship * defenderShip)
     }
     selectedLane = 0;
     lanes[selectedLane]->setSelected(true);
-	srand ( time(NULL) );	counter = 0;	}
+	srand ( time(NULL) );
+	counter = 0;
+
+	//creates turrets
+	for(int i = 0; i < NUM_LANES; i++) {
+		Unit* temp = new Unit(TYPE_TURRET);
+		lanes[i]->deployUnit(temp, true);
+		temp = new Unit(TYPE_TURRET);
+		lanes[i]->deployUnit(temp, false);
+		lanes[i]->atkSummonTime = 0;
+		lanes[i]->defSummonTime = 0;
+	}
+
+
+	
+
+}
 
 void MiniGame::changeLane(int direction)
 {
@@ -83,6 +99,7 @@ void MiniGame::generateUnits() {
 	randLane = rand() % NUM_LANES;	
 	randType = rand() % 4;
 
+	//generate enemy units
 	if(counter == 0) {		
 		Unit* temp = new Unit();
 		switch(randType) {		
@@ -101,8 +118,33 @@ void MiniGame::generateUnits() {
 		}		
 		lanes[randLane]->deployUnit(temp, false);
 	}	
+
+	randLane = rand() % NUM_LANES;	
+	randType = rand() % 4;
+
+	//generate defender units
+	if(counter == 0) {		
+		Unit* temp = new Unit();
+		switch(randType) {		
+		case 0:
+			temp->setType(0);
+			break;
+		case 1:	
+			temp->setType(1);
+			break;	
+		case 2:		
+			temp->setType(2);	
+			break;	
+		case 3:		
+			temp->setType(3);	
+			break;		
+		}		
+		lanes[randLane]->deployUnit(temp, true);
+	}
+
+
 	counter++;	
-	if(counter == 60) 
+	if(counter == GENERATION_TIME) 
 	{		
 		counter = 0;	
 	}

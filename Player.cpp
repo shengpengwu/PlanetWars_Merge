@@ -145,7 +145,7 @@ void Player::purchaseShip()
 void Player::refreshShips()
 {
     for(int i = 0; i < numShips; i++)
-        shipArray[i]->done = false;
+        shipArray[i]->tick();
 }
 
 void Player::draw()

@@ -19,6 +19,7 @@ void Node::initStuff()
     ship = Model::getSelf()->nullShip;
     row = NULL_LOCATION;
     column = NULL_LOCATION;
+    djikRating = 999999999;
     layer = 0.0f;
     selected = false;
     display = false;
@@ -69,6 +70,49 @@ void Node::setType(int t)
     }
 }
 
+Node * Node::findFirstStep()
+{
+    if(this->djikRating == 1) return this;
+    Node * temp;
+    for(int i = 0; i < 6; i++)
+    {
+        if(neighborNodes[i] != Model::getSelf()->nullNode && neighborNodes[i]->djikRating < this->djikRating)
+            return neighborNodes[i]->findFirstStep();
+        else
+            temp = neighborNodes[i];
+    }
+    return Model::getSelf()->nullNode;
+}
+
+void Node::setNeighborDjikWhileSearchingFor(Node * destination)
+{
+    for(int i = 0; i < 6; i++)
+    {
+        if(this->neighborNodes[i] != Model::getSelf()->nullNode)
+        {
+            if(this->neighborNodes[i]->ship == Model::getSelf()->nullShip)
+            {
+                if(neighborNodes[i]->djikRating > this->djikRating+1) 
+                {
+                    neighborNodes[i]->djikRating = this->djikRating+1;
+                    Model::getSelf()->map->djikEnqueNode(neighborNodes[i]);
+                }
+            }
+            else
+            {
+                if(this->neighborNodes[i] == destination)
+                {
+                    if(neighborNodes[i]->djikRating > this->djikRating) 
+                    {
+                        neighborNodes[i]->djikRating = this->djikRating+1;
+                        Model::getSelf()->map->djikEnqueNode(neighborNodes[i]);
+                    }
+                }
+            }
+        }
+    }
+}
+
 int Node::getRandomFreeNeighbor()
 {
     int r = (int)(Model::random()*6);
@@ -101,6 +145,12 @@ void Node::assignNeighbors(Node *top, Node *topRight, Node *bottomRight, Node *b
     this->neighborNodes[5] = topLeft;
 }
 
+bool Node::isOpenNeighborOf(Node * n)
+{
+    if(ship == Model::getSelf()->nullShip && this->isNeighborOf(n)) return true;
+    return false;
+}
+
 bool Node::isNeighborOf(Node * n)
 {
     for(int i = 0; i < 6; i++)
@@ -130,6 +180,7 @@ void Node::select(bool select)
 void Node::tick()
 {
     if(owner == Model::getSelf()->nullPlayer) return;
+    djikRating = 999999999;
     if(this->ship != Model::getSelf()->nullShip) 
         if(!this->ship->done)this->ship->addUnit(type);
     if(owner->home == this) owner->darkResources++;

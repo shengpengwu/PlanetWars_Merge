@@ -24,6 +24,7 @@ public:
     //Used for information in linking/positioning
     int row;
     int column;
+    int djikRating; //Used for Djikstra's
     bool selected;
     bool display; //<- only used by Hud
     
@@ -44,9 +45,12 @@ public:
     Node();
     Node(int type);
     ~Node();
+    Node * findFirstStep();
+    void setNeighborDjikWhileSearchingFor(Node * destination);
     int getRandomFreeNeighbor();
     int getRandomNeighbor();
     void assignNeighbors(Node *top, Node *topRight, Node *bottomRight, Node *bottom, Node *bottomLeft, Node *topLeft);
+    bool isOpenNeighborOf(Node * n);
     bool isNeighborOf(Node * n);
     void select(bool select);
     void tick(); //Do whatever needs to be done on the passing of a turn

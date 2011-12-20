@@ -26,7 +26,14 @@ Unit::Unit(int type) {
 void Unit::initThings()
 {
     level = 1;
-    pos = 0;
+
+	if(type = TYPE_TURRET) {
+		pos = 1;
+	}
+	else {
+		pos = 2;
+	}
+
     if(!Unit::compiled) Unit::compileDL();
 }
 
@@ -77,6 +84,15 @@ void Unit::setType(int type) {
             cooldown = 0;
             this->setColor(FIRE_R, FIRE_G, FIRE_B, 1.0, 0.1, 0.5, 0.7);
             break;
+		case TYPE_TURRET:
+            health = TURRET_HEALTH;
+			maxHealth = TURRET_HEALTH;
+            damage = TURRET_DAMAGE;
+            speed = TURRET_SPEED;
+            range = TURRET_RANGE;
+            cooldown = 0;
+            this->setColor(0.8, 0.0, 0.8, 1.0, 0.1, 0.5, 0.7);
+            break;
     }
 }
 
@@ -95,6 +111,9 @@ void Unit::resetCooldown()
         case TYPE_FIRE:
             cooldown = FIRE_COOL;
             break;
+		case TYPE_TURRET:
+			cooldown = FIRE_COOL;
+            break;
     }
 }
 
@@ -110,14 +129,19 @@ void Unit::resetHeal()
 
 bool Unit::attack(Unit *enemy)
 {	
+	
     if(cooldown <= 0)
-    {
-        enemy->health -= damage;
+    {		
+		
+		cout << "health: " << enemy->health;
+        enemy->health = enemy->health - damage;
         resetCooldown();
     }
-    else
+    else{ 
 		//moved to update
         //cooldown--; 
+	}
+
     return (enemy->health <= 0);
 }
 
@@ -128,16 +152,19 @@ bool Unit::attackShip(Ship *atkShip) {
         atkShip->health -= damage;
         resetCooldown();
     }
-    else
+    else {
+
 		//moved to update
         //cooldown--;
+	}
+
     return (atkShip->health <= 0);
 
 }
 
 //returns true is a unit was healed
 bool Unit::healUnit(Unit * friendly) {
-	
+
 	if(type != 0) {
 		return false;
 	}
@@ -147,7 +174,7 @@ bool Unit::healUnit(Unit * friendly) {
 	}
 
 	else if(healCooldown <= 0) {
-		MessageBox(NULL, "I am just trying my wedding dress", NULL, NULL);
+		
 		friendly->health += healVal;
 		resetHeal();
 		return true;
@@ -186,10 +213,13 @@ void Unit::draw()
 void Unit::drawAtPosition()
 {
 
+	//if(type != TYPE_TURRET) 
+	//{
 		glPushMatrix();
 		glTranslated(0, 5, pos);
 		draw();
 		glPopMatrix();
+	//}
     
 }
 

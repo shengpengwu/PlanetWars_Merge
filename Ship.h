@@ -25,8 +25,8 @@ public:
     Node * loc;
     Player * owner;
 	int health;
-
-	int summonTime;
+    
+    Node * destination;
     
     int numWaterUnits;
     int numEarthUnits;
@@ -40,8 +40,12 @@ public:
     virtual void draw();        //draws geometry at current location
     void drawCargo();
     void drawAtPosition();
+    
+    void tick();
 
-    void moveToNode(Node * newLoc);
+    void setDestination(Node * destiny);
+    void djikstrasToDestination();
+    bool moveToNode(Node * newLoc);
     void addUnit(int type);
     Unit * deployUnit(int type);
     

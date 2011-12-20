@@ -64,6 +64,7 @@
 #define TYPE_WIND  2
 #define TYPE_FIRE  3
 #define TYPE_DARK  4
+#define TYPE_TURRET 5
 
 //TYPE COLOR VARS
 #define WATER_R 0.0f
@@ -92,31 +93,36 @@
 
 //TYPE ATTRIBUTE VARIABLES
 #define WATER_HEALTH 1000;
-#define WATER_DAMAGE 20;
-#define WATER_RANGE 70;
-#define WATER_SPEED 3;
-#define WATER_COOL 50;
-#define WATER_HEAL_COOL 50;
-#define WATER_HEAL 40;
-;
+#define WATER_DAMAGE 70;
+#define WATER_RANGE 80;
+#define WATER_SPEED 4;
+#define WATER_COOL 55;
+#define WATER_HEAL_COOL 65;
+#define WATER_HEAL 55;
 
-#define EARTH_HEALTH 3000;
-#define EARTH_DAMAGE 50;
-#define EARTH_RANGE 10;
+#define EARTH_HEALTH 2800;
+#define EARTH_DAMAGE 100;
+#define EARTH_RANGE 30;
 #define EARTH_SPEED 1;
 #define EARTH_COOL 50;
 
-#define WIND_HEALTH 1200;
-#define WIND_DAMAGE 50;
-#define WIND_RANGE 100;
+#define WIND_HEALTH 1100;
+#define WIND_DAMAGE 105;
+#define WIND_RANGE 60;
 #define WIND_SPEED 5;
-#define WIND_COOL 20;
+#define WIND_COOL 45;
 
-#define FIRE_HEALTH 1800;
-#define FIRE_DAMAGE 150;
-#define FIRE_RANGE 50;
-#define FIRE_SPEED 3;
-#define FIRE_COOL 60;
+#define FIRE_HEALTH 1600;
+#define FIRE_DAMAGE 290;
+#define FIRE_RANGE 40;
+#define FIRE_SPEED 2;
+#define FIRE_COOL 80;
+
+#define TURRET_HEALTH 10000;
+#define TURRET_DAMAGE 400;
+#define TURRET_RANGE 100;
+#define TURRET_SPEED 0;
+#define TURRET_COOL 40;
 
 //SHIP TYPES
 #define NUM_SHIP_TYPES     4
@@ -126,18 +132,22 @@
 #define SHIP_TYPE_BATTLE   3
 
 //summon time
-#define SUMMON_TIME 150
+#define SUMMON_TIME 300
+
+//generation time
+#define GENERATION_TIME 120
 
 //DEFAULTS
 #define DEFAULT_NUM_PLAYERS 2
 #define DEFAULT_NUM_NODES 50
 #define SEED 1
-#define DEFAULT_STATE TITLE
+#define DEFAULT_STATE MINIGAME
 
 //Forward declarations- everything has access to everything (woah)
 class Menu;
 class Player;
 class Fleet;
+class Flagship;
 class Ship;
 class Unit;
 class Hud;

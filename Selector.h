@@ -27,9 +27,11 @@ public:
     static bool compiled;       //True iff displayList names a valid glDisplayList
     static GLuint displayList;  //Name of displaylist for object
     static GLuint dot;
+    static GLuint arrow;
     
     void compileDL();       //Stores geometry in a displayList
-    void draw();            //draws geometry at current location
+    void draw();  
+    void drawArrow();       //draws geometry at current location
     void drawDot();
     void set(float x, float y); //sets row/column based on mouse x and y
     void drawAtPosition();

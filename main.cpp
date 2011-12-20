@@ -12,7 +12,7 @@
   // Linux Includes Here
   #error Can't be compiled on Linux yet
 #elif defined _WIN32 || _WIN64
-#include "GL\freeglut.h"
+    #include <GL\freeglut.h>
     #include <GL\GL.h>
 #else
     #include <OpenGL/OpenGL.h>
@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "TextPrint.h"
+//#include "TextPrint.h"
 #include "Model.h"
 
 //MODEL ACCESSORS:: DO NOT ABUSE THESE!!!!
@@ -35,7 +35,7 @@ Map * map;
 Node ** nodeArray;
 Selector * selector;
 Menu * menu;
-// MiniGame * game; //<- CANNOT USE AS MODEL'S GAME IS DYNAMIC
+MiniGame * game; //<- CANNOT USE AS MODEL'S GAME IS DYNAMIC
 
 /////////
 //GAME LOGIC FUNCTIONS
@@ -52,7 +52,7 @@ void initGame(int numPlayers, int numNodes)
     selector = model->setSelector();
     hud = model->setHud();
     map = model->setMap();
-    //game = model->setMiniGame(nodeArray[0], playerArray[0]->shipArray[0], playerArray[1]->shipArray[0]);
+    game = model->setMiniGame(nodeArray[0], playerArray[0]->shipArray[0], playerArray[1]->shipArray[0]);
     menu = model->setMenu();
 }
 
@@ -68,8 +68,7 @@ void pregame(){
 	glLoadIdentity();
 	gluPerspective(60.0 , ((double) Model::getSelf()->width) / ((double) Model::getSelf()->height), 1.0f , 100.0);
 	glViewport(0 , 0 , Model::getSelf()->width, Model::getSelf()->height);
-	
-	TextPrint::bitText(0,10,30,.3,.3,.3,GLUT_BITMAP_TIMES_ROMAN_24,"Welcome to Planet Wars");
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	// Notes for the camera:
@@ -81,8 +80,6 @@ void pregame(){
 		0, 0, 0, 
 		0, 0, -1
 		); 
-
-	
 
 	menu->setMenu(TITLE);
 	glPushMatrix();
@@ -233,14 +230,6 @@ void MouseFunc(int button, int state, int x, int y)
     {
         map->selectSelected();
     }
-}
-
-void MouseWheelFunc(int button, int dir, int x, int y)
-{
-	if(dir>0 && model->zoom < 4*sqrt(std::max ((float)(model->rowMax - model->rowMin), (float)(model->colMax-model->colMin))*4.0) *2 ) // zoom out
-		model->zoom++;
-	if(dir<0 && model->zoom > -10) // zoom in 
-		model->zoom--;
 }
 
 void DisplayFunc()
@@ -440,7 +429,6 @@ void initGL(int argc, char * argv[])
 	glutIdleFunc(IdleFunc);
     glutPassiveMotionFunc(PassiveMotionFunc);
     glutMouseFunc(MouseFunc);
-	glutMouseWheelFunc(MouseWheelFunc);
     glutKeyboardFunc(KeyboardFunc);
     glutSpecialFunc(SpecialFunc);
 }
@@ -457,6 +445,7 @@ int main (int argc, char * argv[])
     initGL(argc, argv);
     initGame(model->numPlayers, model->numNodes);
     glutMainLoop();
+
     std::cout << "Hello, World!\n";
     return 0;
 }

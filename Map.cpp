@@ -13,6 +13,11 @@ Map::Map(int numNodes)
     this->nodeArray = Model::getSelf()->nodeArray;
     this->selector = Model::getSelf()->selector;
     createNodeMap(numNodes);
+    
+    this->djikQueue = new Node *[numNodes];
+    this->djikQIndex = 0;
+    this->djikQLen = 0;
+    this->djikFound = false;
 }
 
 Map::~Map()
@@ -34,6 +39,80 @@ Node * Map::getNodeAt(int row, int col)
 
 void Map::selectSelected()
 {
+    Node *n = getNodeAt(selector->row, selector->column);
+    
+    if(n == Model::getSelf()->nullNode)
+    {
+        if(Model::getSelf()->selectedShip == Model::getSelf()->nullShip)
+        {
+            if(Model::getSelf()->selectedNode == Model::getSelf()->nullNode)
+            {
+                //NULL- n, selShip, selNode
+                //All null... do nothing
+            }
+            else
+            {
+                //NULL- n, selShip
+                Model::getSelf()->selectedNode->select(false);
+            }
+        }
+        else
+        {
+            if(Model::getSelf()->selectedNode == Model::getSelf()->nullNode)
+            {
+                //NULL- n, selNode
+                //Lol is this even possible?
+                Model::getSelf()->selectedShip->setDestination(n);
+                Model::getSelf()->selectedShip = Model::getSelf()->nullShip;
+            }
+            else
+            {
+                //NULL- n
+                Model::getSelf()->selectedNode->select(false);
+                Model::getSelf()->selectedShip->setDestination(n);
+                Model::getSelf()->selectedShip = Model::getSelf()->nullShip;
+            }
+        }
+    }
+    else
+    {
+        if(Model::getSelf()->selectedShip == Model::getSelf()->nullShip)
+        {
+            if(Model::getSelf()->selectedNode == Model::getSelf()->nullNode)
+            {
+                //NULL- selShip, selNode
+                n->select(true);
+                Model::getSelf()->selectedShip = n->ship;
+            }
+            else
+            {
+                //NULL- selShip, 
+                n->select(true);
+                Model::getSelf()->selectedShip = n->ship;
+            }
+        }
+        else
+        {
+            if(Model::getSelf()->selectedNode == Model::getSelf()->nullNode)
+            {
+                //NULL- selNode
+                //Again... don't think this is possible... but whatevs
+                n->select(true);
+                if(n->ship == Model::getSelf()->nullShip) Model::getSelf()->selectedShip->setDestination(n);
+                Model::getSelf()->selectedShip = n->ship;
+            }
+            else
+            {
+                //NULL- (none)
+                n->select(true);
+                if(n->ship == Model::getSelf()->nullShip) Model::getSelf()->selectedShip->setDestination(n);
+                Model::getSelf()->selectedShip = n->ship;
+            }
+        }
+    }
+    
+    
+    /*
     Node *n;
     n = getNodeAt(selector->row, selector->column);//Get node at spot clicked
     if(n != Model::getSelf()->nullNode) //If spot clicked is an actual node...
@@ -59,7 +138,7 @@ void Map::selectSelected()
         {
             if(Model::getSelf()->selectedShip != Model::getSelf()->nullShip)//but a ship is already selected...
             {
-                Model::getSelf()->selectedShip->moveToNode(n);//Attempt to move ship to new node
+                Model::getSelf()->selectedShip->setDestination(n);//Attempt to move ship to new node
                 Model::getSelf()->selectedShip = Model::getSelf()->nullShip;//and set selected ship to null
             }
         }
@@ -68,8 +147,52 @@ void Map::selectSelected()
     {
         if(Model::getSelf()->selectedNode != Model::getSelf()->nullNode)//but a node IS currently selected... 
             Model::getSelf()->selectedNode->select(false); //Deselect the selected node.
+        if(Model::getSelf()->selectedShip != Model::getSelf()->nullShip)
+            Model::getSelf()->selectedShip->setDestination(Model::getSelf()->nullNode);
         Model::getSelf()->selectedShip = Model::getSelf()->nullShip;//And deselect the ship
     }
+     */
+}
+
+void Map::djikEnqueNode(Node * node)
+{
+    cout << node->column << ", "<< node->row << endl;
+    djikQueue[djikQLen] = node;
+    djikQLen++;
+}
+
+Node * Map::findNextDjikNodFromAtoB(Node * a, Node * b)
+{
+
+    if(a == Model::getSelf()->nullNode || b == Model::getSelf()->nullNode) return a;
+    
+    djikQLen = 0;
+    djikQIndex = 0;
+    djikFound = false;
+
+
+    djikEnqueNode(a);
+    a->djikRating = 0;
+    
+    int tempLen;
+    
+    while(!djikFound)
+    {
+        tempLen = djikQLen;
+        for(int i = djikQIndex; i < tempLen && !djikFound; i++)
+        {
+            if(djikQueue[i] == b) djikFound = true;
+            if(!djikFound) djikQueue[i]->setNeighborDjikWhileSearchingFor(b);
+            djikQIndex++;
+        }
+    }
+
+    Node * retPtr = b->findFirstStep();
+
+    for(int i = 0; i < Model::getSelf()->numNodes; i++)
+        nodeArray[i]->djikRating=99999999999;
+    
+    return retPtr;
 }
 
 void Map::linkNodeToNeighbors(Node * node)

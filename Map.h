@@ -16,6 +16,10 @@ class Map
 {
 public:
     Node ** nodeArray;
+    Node ** djikQueue;
+    int djikQIndex;
+    int djikQLen;
+    bool djikFound;
     Selector * selector;
     
     Map(int numNodes);
@@ -23,6 +27,8 @@ public:
     
     Node * getNodeAt(int row, int col);
     void selectSelected();
+    void djikEnqueNode(Node * node);
+    Node * findNextDjikNodFromAtoB(Node * a, Node * b);
     void linkNodeToNeighbors(Node * node);
     void createNodeMap(int numNodes);
     void tick();
