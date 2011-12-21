@@ -55,6 +55,7 @@ public:
 
     static bool compiled;       //True iff displayList names a valid glDisplayList
     static GLuint displayList;  //Name of displaylist for object
+    static GLuint healthBar;
     void compileDL();
 	void update();
     void draw();

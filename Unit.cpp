@@ -11,6 +11,7 @@
 
 bool Unit::compiled = false;
 GLuint Unit::displayList;
+GLuint Unit::healthBar;
 
 Unit::Unit(void) {
     initThings();
@@ -249,6 +250,21 @@ void Unit::compileDL()
 	glPopMatrix();
     
     glEndList();
+
+
+    Unit::healthBar = glGenLists(1);
+    glNewList(Unit::healthBar, GL_COMPILE);
+    
+    setColor(0.0, 1.0, 0.0, 1.0, 0.1, 0.5, 0.7);
+    setGLColor();
+	glBegin(GL_QUADS);
+    glVertex3f(-10.0f, 10.0f, 0.0f);
+    glVertex3f(-10.0f, 15.0f, 0.0f);
+    glVertex3f(10.0f, 15.0f, 0.0f);
+    glVertex3f(10.0f, 10.0f, 0.0f);
+    
+    glEndList();
+
     Unit::compiled = true;
 }
 
@@ -263,6 +279,11 @@ void Unit::draw()
     if(!Unit::compiled) return;
     setGLColor();
     glCallList(Unit::displayList);
+
+    glPushMatrix();
+    glScalef(health/maxHealth, 1.0, 1.0);
+    glCallList(Unit::healthBar);
+    glPopMatrix();
 }
 
 void Unit::drawAtPosition()
