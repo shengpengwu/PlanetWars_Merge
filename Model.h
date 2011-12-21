@@ -111,6 +111,7 @@
 #define WIND_RANGE 60;
 #define WIND_SPEED 5;
 #define WIND_COOL 45;
+#define WIND_CONVERT_COOLDOWN 45;
 
 #define FIRE_HEALTH 1600;
 #define FIRE_DAMAGE 290;

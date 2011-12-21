@@ -15,12 +15,14 @@ GLuint Unit::displayList;
 Unit::Unit(void) {
     initThings();
 	arrayIndex = 0;
+	attacker = false;
 }
 
 Unit::Unit(int type) {
     setType(type);
     initThings();
 	arrayIndex = 0;
+	attacker = false;
 }
 
 void Unit::initThings()
@@ -73,6 +75,7 @@ void Unit::setType(int type) {
             speed = WIND_SPEED;
             range = WIND_RANGE;
             cooldown = 0;
+			convertCooldown = 0;
             this->setColor(WIND_R, WIND_G, WIND_B, 1.0, 0.1, 0.5, 0.7);
             break;
         case TYPE_FIRE:
@@ -125,6 +128,15 @@ void Unit::resetHeal()
 			break;
 	}
 
+}
+
+void Unit::resetConvert()
+{
+	switch(type) {
+		case TYPE_WIND:
+			healCooldown = WIND_CONVERT_COOLDOWN;
+			break;
+	}
 }
 
 bool Unit::attack(Unit *enemy)
@@ -186,13 +198,55 @@ bool Unit::healUnit(Unit * friendly) {
 	return false;
 }
 
+void Unit::setAttacker(bool attackerVal) {
+	attacker = attackerVal;
+}
+
 void Unit::compileDL()
-{
+{	
     if(Unit::compiled) return;
     Unit::displayList = glGenLists(1);
     glNewList(Unit::displayList, GL_COMPILE);
+
+
+
+	glPushMatrix();
+	gluSphere(gluNewQuadric(), 1, 36, 18);
     
-	gluSphere(gluNewQuadric(), 10, 36, 18);
+	//glScalef(2.0, 2.0, 2.0);
+
+	glBegin(GL_TRIANGLES);	
+	
+	//glColor3f(10.0f,0.0f,0.0f);			// red
+	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-frontplane
+	//glColor3f(0.0f,10.0f,0.0f);			// green
+	glVertex3f(-10.0f,-10.0f, 10.0f);		// left-frontplane
+	//glColor3f(0.0f,0.0f,1.0f);			// blue
+	glVertex3f( 10.0f,-10.0f, 10.0f);		// right-frontplane
+
+	//glColor3f(10.0f,0.0f,0.0f);			// red
+	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-rightplane
+	//glColor3f(0.0f,0.0f,10.0f);			// blue
+	glVertex3f( 10.0f,-10.0f, 10.0f);		// left-rightplane
+	//glColor3f(0.0f,01.0f,0.0f);			// green
+	glVertex3f( 10.0f,-10.0f, -10.0f);		// right-rightplane
+
+	//glColor3f(10.0f,0.0f,0.0f);			// red
+	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-backplane
+	//glColor3f(0.0f,1.0f,0.0f);			// green
+	glVertex3f( 10.0f,-10.0f, -10.0f);		// left-backplane
+	//glColor3f(0.0f,0.0f,1.0f);			// plane
+	glVertex3f(-10.0f,-10.0f, -10.0f);		// right-backplane
+    
+	//glColor3f(10.0f,0.0f,0.0f);			// red
+	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-leftplane
+	//glColor3f(0.0f,0.0f,10.0f);			// blue
+	glVertex3f(-10.0f,-10.0f,-10.0f);		// left-leftplane
+	//glColor3f(0.0f,10.0f,0.0f);			// green
+	glVertex3f(-10.0f,-10.0f, 10.0f);		// right-leftplane
+	glEnd();
+
+	glPopMatrix();
     
     glEndList();
     Unit::compiled = true;
@@ -201,6 +255,7 @@ void Unit::compileDL()
 void Unit::update() {
 	cooldown--;
 	healCooldown--;
+	convertCooldown--;
 }
 
 void Unit::draw()
@@ -215,13 +270,22 @@ void Unit::drawAtPosition()
 
 	//if(type != TYPE_TURRET) 
 	//{
+
 		glPushMatrix();
-		glTranslated(0, 5, pos);
+		glTranslated(0, 10, pos);
 		draw();
 		glPopMatrix();
+
+
 	//}
     
 }
+
+int Unit::getType() { 
+	return type;
+}
+
+
 
 
 

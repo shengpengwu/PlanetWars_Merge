@@ -13,6 +13,10 @@
 
 class Unit : public DrawableGeometry
 {
+
+private:
+	int type;
+
 public:
 
     Unit(void); 
@@ -24,8 +28,9 @@ public:
     
     int pos;
     
-    int type;
-    int level;	
+    
+    int level;
+	bool attacker;
     
 	int maxHealth;
     int health;
@@ -34,8 +39,10 @@ public:
 	int range;
     int cooldown;
 	int healCooldown;
+	int convertCooldown;
 	int healVal;
 
+	int getType();
     void reset();
     void resetCooldown();
 	void resetHeal();
@@ -43,6 +50,8 @@ public:
     bool attack(Unit * enemy);
 	bool attackShip(Ship *atkShip);
 	bool healUnit(Unit * friendly);
+	void setAttacker(bool attackerVal);
+	void resetConvert();
 
     static bool compiled;       //True iff displayList names a valid glDisplayList
     static GLuint displayList;  //Name of displaylist for object

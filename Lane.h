@@ -41,6 +41,7 @@ public:
 	Unit* findNextHeal(bool attacker);
     void tick();
 	int getIndex(vector<Unit*> list, Unit* unit);
+	//bool convertUnit(Unit *converter, Unit* convertee);
     
     static bool compiled;       //True iff displayList names a valid glDisplayList
     static GLuint displayList;  //Name of displaylist for object

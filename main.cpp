@@ -282,7 +282,8 @@ void KeyboardFunc(unsigned char key, int x, int y)
 	case TITLE:
 		switch (key)
 		{
-		case 13:
+		
+		case 13: // Enter
 			model->state = MAINMENU;
 			break;
 		}
@@ -377,6 +378,20 @@ void KeyboardFunc(unsigned char key, int x, int y)
 
 void SpecialFunc(int key, int x, int y)
 {
+	switch(key) {
+
+		case GLUT_KEY_UP:
+			break;
+		case GLUT_KEY_DOWN:
+			break;
+		case GLUT_KEY_LEFT:
+			model->mgame->changeLane(LEFT);
+			break;
+		case GLUT_KEY_RIGHT:
+			model->mgame->changeLane(RIGHT);
+			break;
+
+	}
      //if(key == GLUT_KEY_F1){
      //mode = (mode + 1)%NUM_MODES;
      //}
