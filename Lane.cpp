@@ -197,8 +197,16 @@ void Lane::actUnit(Unit * unit, bool attacker)
 			kill = unit->attackShip(defendShip);
 
 			if(kill) {
-				//end game
-				//MessageBox(NULL, "Defend ship is dead!", NULL, NULL);
+				/*
+
+				******************GAME OVER**********************
+
+
+			   ***************ATTACKER WINS***********************
+
+
+				*/
+
 			}
 
 		}
@@ -250,8 +258,15 @@ void Lane::actUnit(Unit * unit, bool attacker)
 			kill = unit->attackShip(attackShip);
 
 			if(kill) {
-				//end game
-				//MessageBox(NULL, "Attack ship is dead!", NULL, NULL);
+				/*
+
+				******************GAME OVER**********************
+
+
+			   ***************DEFENDER WINS***********************
+
+
+				*/
 			}
 		}
 	}

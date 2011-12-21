@@ -259,22 +259,22 @@ Unit * Ship::deployUnit(int type)
         case TYPE_WATER:
             if(numWaterUnits <= 0) break;
             numWaterUnits--;
-            return new Unit(TYPE_WATER);
+            return new Unit(TYPE_WATER, owner);
             break;
         case TYPE_EARTH:
             if(numEarthUnits >= MAX_UNITS) break;
             numEarthUnits--;
-            return new Unit(TYPE_EARTH);
+            return new Unit(TYPE_EARTH, owner);
             break;
         case TYPE_WIND:
             if(numWindUnits >= MAX_UNITS) break;
             numWindUnits--;
-            return new Unit(TYPE_WIND);
+            return new Unit(TYPE_WIND, owner);
             break;
         case TYPE_FIRE:
             if(numFireUnits >= MAX_UNITS) break;
             numFireUnits--;
-            return new Unit(TYPE_FIRE);
+            return new Unit(TYPE_FIRE, owner);
             break;
         default:
             break;

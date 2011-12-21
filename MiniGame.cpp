@@ -19,9 +19,9 @@ MiniGame::MiniGame(Node * planet, Ship * attackerShip, Ship * defenderShip)
 
 	//creates turrets
 	for(int i = 0; i < NUM_LANES; i++) {
-		Unit* temp = new Unit(TYPE_TURRET);
+		Unit* temp = new Unit(TYPE_TURRET, attackerShip->owner);
 		lanes[i]->deployUnit(temp, true);
-		temp = new Unit(TYPE_TURRET);
+		temp = new Unit(TYPE_TURRET, defenderShip->owner);
 		lanes[i]->deployUnit(temp, false);
 		lanes[i]->atkSummonTime = 0;
 		lanes[i]->defSummonTime = 0;
@@ -50,7 +50,7 @@ void MiniGame::selectLane(int lane)
 void MiniGame::deployUnit(Ship * s, int type) {
 	
     //Unit * u = s->deployUnit(type);
-	Unit* u = new Unit(type);
+	Unit* u = new Unit(type, s->owner);
     if(u != Model::getSelf()->nullUnit)
     {
 		//change != attacker

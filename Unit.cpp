@@ -10,7 +10,8 @@
 #include "Model.h"
 
 bool Unit::compiled = false;
-GLuint Unit::displayList;
+GLuint Unit::teamList;
+GLuint Unit::typeList;
 GLuint Unit::healthBar;
 
 Unit::Unit(void) {
@@ -19,10 +20,11 @@ Unit::Unit(void) {
 	attacker = false;
 }
 
-Unit::Unit(int type) {
+Unit::Unit(int type, Player * o) {
     setType(type);
     initThings();
 	arrayIndex = 0;
+	this->owner = o;
 	attacker = false;
 }
 
@@ -206,11 +208,10 @@ void Unit::setAttacker(bool attackerVal) {
 void Unit::compileDL()
 {	
     if(Unit::compiled) return;
-    Unit::displayList = glGenLists(1);
-    glNewList(Unit::displayList, GL_COMPILE);
 
 
-
+    Unit::teamList = glGenLists(1);
+    glNewList(Unit::teamList, GL_COMPILE);
 	glPushMatrix();
 	gluSphere(gluNewQuadric(), 1, 36, 18);
     
@@ -225,12 +226,7 @@ void Unit::compileDL()
 	//glColor3f(0.0f,0.0f,1.0f);			// blue
 	glVertex3f( 10.0f,-10.0f, 10.0f);		// right-frontplane
 
-	//glColor3f(10.0f,0.0f,0.0f);			// red
-	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-rightplane
-	//glColor3f(0.0f,0.0f,10.0f);			// blue
-	glVertex3f( 10.0f,-10.0f, 10.0f);		// left-rightplane
-	//glColor3f(0.0f,01.0f,0.0f);			// green
-	glVertex3f( 10.0f,-10.0f, -10.0f);		// right-rightplane
+	
 
 	//glColor3f(10.0f,0.0f,0.0f);			// red
 	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-backplane
@@ -238,6 +234,29 @@ void Unit::compileDL()
 	glVertex3f( 10.0f,-10.0f, -10.0f);		// left-backplane
 	//glColor3f(0.0f,0.0f,1.0f);			// plane
 	glVertex3f(-10.0f,-10.0f, -10.0f);		// right-backplane
+    
+	
+	glEnd();
+
+	glPopMatrix();
+    
+    glEndList();
+
+	Unit::typeList = glGenLists(1);
+    glNewList(Unit::typeList, GL_COMPILE);
+	glPushMatrix();
+	gluSphere(gluNewQuadric(), 1, 36, 18);
+    
+	//glScalef(2.0, 2.0, 2.0);
+
+	glBegin(GL_TRIANGLES);	
+
+	//glColor3f(10.0f,0.0f,0.0f);			// red
+	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-rightplane
+	//glColor3f(0.0f,0.0f,10.0f);			// blue
+	glVertex3f( 10.0f,-10.0f, 10.0f);		// left-rightplane
+	//glColor3f(0.0f,01.0f,0.0f);			// green
+	glVertex3f( 10.0f,-10.0f, -10.0f);		// right-rightplane
     
 	//glColor3f(10.0f,0.0f,0.0f);			// red
 	glVertex3f( 0.0f, 10.0f, 0.0f);		// up-leftplane
@@ -262,7 +281,7 @@ void Unit::compileDL()
     glVertex3f(-10.0f, 15.0f, 0.0f);
     glVertex3f(10.0f, 15.0f, 0.0f);
     glVertex3f(10.0f, 10.0f, 0.0f);
-    
+    glEnd();
     glEndList();
 
     Unit::compiled = true;
@@ -277,11 +296,22 @@ void Unit::update() {
 void Unit::draw()
 {
     if(!Unit::compiled) return;
+	setType(type);
     setGLColor();
-    glCallList(Unit::displayList);
+    glCallList(Unit::typeList);
+
+	if(this->owner == Model::getSelf()->playerArray[0])
+		//setColor(PLAYER_1_R, PLAYER_1_G, PLAYER_1_B, 1.0, 0.1, 0.5, 0.7);
+		setColor(1.0, 0.0, 0.0, 1.0, 0.1, 0.5, 0.7);
+	else
+		//setColor(PLAYER_2_R, PLAYER_2_G, PLAYER_2_B, 1.0, 0.1, 0.5, 0.7);
+		setColor(0.0, 0.0, 1.0, 1.0, 0.1, 0.5, 0.7);
+
+	setGLColor();
+	glCallList(Unit::teamList);
 
     glPushMatrix();
-    glScalef(health/maxHealth, 1.0, 1.0);
+    glScalef((float)health/(float)maxHealth, 1.0, 1.0);
     glCallList(Unit::healthBar);
     glPopMatrix();
 }

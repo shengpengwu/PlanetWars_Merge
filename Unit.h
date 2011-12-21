@@ -9,6 +9,7 @@
 #define H_UNIT
 
 #include "Model.h"
+#include "Player.h"
 #include "DrawableGeometry.h"
 
 class Unit : public DrawableGeometry
@@ -20,7 +21,8 @@ private:
 public:
 
     Unit(void); 
-	Unit(int type);
+	Unit(int type, Player * o);
+	Player * owner;
     void initThings();
 
 
@@ -54,7 +56,8 @@ public:
 	void resetConvert();
 
     static bool compiled;       //True iff displayList names a valid glDisplayList
-    static GLuint displayList;  //Name of displaylist for object
+    static GLuint teamList;  //Name of displaylist for object
+	static GLuint typeList;
     static GLuint healthBar;
     void compileDL();
 	void update();
